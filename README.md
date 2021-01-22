@@ -49,7 +49,7 @@ $ roslaunch aquatic_sim upload_rexrov2_beacon.launch
 ```
 
 ### Useful topics:
-For each of the USVs there will be according topics, replace wamv0 with the bumber of robot you need:
+For each of the USVs there will be according topics, replace wamv0 with the number of robot, the topic of which is needed:
     
     /wamv0/cmd_vel - geometry_msgs/Twist to move the specific WAM-V robot
     /wamv0/robot_localization/gps/filtered - global robot position
