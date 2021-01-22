@@ -12,7 +12,7 @@ The software support is provided for the following software environment:
     ROS Melodic
 
 
-## Installation dependencies:
+## Installation:
 
 ### Install VRX dependencies:
 
