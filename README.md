@@ -22,6 +22,8 @@ $ git clone https://github.com/osrf/vrx.git && git checkout 060d9f7
 
 $ git clone https://github.com/uuvsimulator/rexrov2.git && git checkout 1546681
 
+$ git clone https://github.com/ingeniarius-ltd/wifi_comm_emulation.git
+
 $ sudo apt-get install ros-melodic-robot-localization
 
 $ cd ..
