@@ -1,0 +1,16 @@
+<launch>
+
+ <!-- Here we create the rexrov2 commander! -->
+
+ <param name="rexrov2/robot_description"
+             command="$(find xacro)/xacro '$(find rexrov2_description)/robots/rexrov2_default.xacro' --inorder
+                      inertial_reference_frame:=world" />
+
+  <!-- Spawn rexrov2 in Gazebo -->
+  <node name="spawn_model_rexrov2" pkg="gazebo_ros" type="spawn_model"
+        args="-x 0 -y 0 -z 0
+              -R 0 -P 0 -Y 0
+              -urdf -param rexrov2/robot_description -model rexrov2"/>
+
+
+</launch>

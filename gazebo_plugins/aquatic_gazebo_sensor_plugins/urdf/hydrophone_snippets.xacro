@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!-- Copyright (c) 2020 Ingeniarius, Lda Authors.
+     All rights reserved.
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- Acoustic Range PARAMETERS -->
+  <xacro:macro name="default_hydrophone_ha1" params="namespace parent_link beacon_parent R *origin">
+
+    <!-- Acoustic Range Parameters -->
+    <xacro:hydrophone_plugin_macro
+      namespace="${namespace}"
+      suffix=""
+      parent_link="${parent_link}"
+      beacon_parent="${beacon_parent}"
+      topic="hydrophone"
+      mass="0.015"
+      update_rate="10"
+      sensitivity_dB="-190"
+      preAmpGain="20"
+      cutOffFrequency="${1/(0.000000157*R)}"
+      stddev="0.1"
+      showRange_gt="true"
+      soundSpeedModel="Medwin"
+      spreadingModel="Combined"
+      mode="SignalLevel">
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+      <xacro:insert_block name="origin"/>
+    </xacro:hydrophone_plugin_macro>
+
+  </xacro:macro>
+
+  <!-- Acoustic Range PARAMETERS  -->
+  <xacro:macro name="default_hydrophone" params="namespace parent_link beacon_parent *origin">
+    <xacro:hydrophone_plugin_macro
+      namespace="${namespace}"
+      suffix=""
+      parent_link="${parent_link}"
+
+      beacon_parent="${beacon_parent}"
+      topic="hydrophone"
+
+      mass="0.015"
+      update_rate="10"
+
+      sensitivity_dB="-190"
+      preAmpGain="25"
+      cutOffFrequency="10000"
+      stddev="0.073647"
+
+      soundSpeedModel="Leroy"
+      spreadingModel="Combined"
+      mode="SignalLevel">
+
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001" />
+      <xacro:insert_block name="origin"/>
+    </xacro:hydrophone_plugin_macro>
+  </xacro:macro>
+
+
+  <!-- Sensor Collision Mesh -->
+  <xacro:macro name="no_collision">
+    <collision>
+      <geometry>
+        <cylinder length="${0.000001}" radius="${0.000001}" />
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 ${0.5*pi} 0"/>
+    </collision>
+  </xacro:macro>
+
+  <!-- Hydrophone PLUGIN -->
+  <xacro:macro name="hydrophone_plugin_macro"
+    params="namespace suffix parent_link beacon_parent topic mass update_rate
+      sensitivity_dB preAmpGain cutOffFrequency stddev soundSpeedModel
+      spreadingModel mode *inertia *origin">
+
+    <!-- LINK between Sensor and Robot  -->
+    <link name="${namespace}/hydrophone${suffix}_link">
+
+      <inertial>
+        <xacro:insert_block name="inertia" />
+        <mass value="${mass}" />  <!-- [kg] -->
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </inertial>
+
+      <visual>
+        <geometry>
+          <!-- Visual Mesh of Sensor -->
+          <mesh filename="file://$(find aquatic_gazebo_sensor_plugins)/meshes/beacon_hydrophone.dae" scale="1 1 1"/>
+        </geometry>
+      </visual>
+
+      <!-- COLLISION XACRO DEFINED ABOVE -->
+      <xacro:no_collision/>
+
+    </link>
+
+    <!-- JOINT: Sensor to Robot -->
+    <joint name="${namespace}/hydrophone${suffix}_joint" type="revolute">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent_link}" />
+      <child link="${namespace}/hydrophone${suffix}_link" />
+      <limit upper="0" lower="0" effort="0" velocity="0" />
+      <axis xyz="1 0 0"/>
+    </joint>
+
+    <gazebo>
+      <plugin filename="libuuv_gazebo_ros_hydrophone_plugin.so" name="libuuv_gazebo_hydrophone${suffix}_plugin">
+
+        <robot_namespace>${namespace}</robot_namespace> <!-- (string, required): ros namespace in which the messages are published -->
+        <link_name>${namespace}/hydrophone${suffix}_link</link_name> <!-- (string, required): name of the body which holds the IMU sensor -->
+
+        <beacon_parent>${beacon_parent}</beacon_parent>
+        <sensor_topic>${topic}</sensor_topic> <!-- (string): name of the sensor output topic and prefix of service names -->
+        <update_rate>${update_rate}</update_rate> <!-- Update period of accelerometer and gyroscope [s] -->
+        <enable_gazebo_messages>false</enable_gazebo_messages>
+
+        <sensitivity>${sensitivity_dB}</sensitivity> <!-- measurement range [kPa] -->
+        <pre_ampGain>${preAmpGain}</pre_ampGain> <!-- measurement stddev [kPa] -->
+        <cut_off_frequency>${cutOffFrequency}</cut_off_frequency> <!--  -->
+        <sound_speed_model>${soundSpeedModel}</sound_speed_model>
+        <spreading_model>${spreadingModel}</spreading_model>
+        <operational_mode>${mode}</operational_mode>
+        <noise_stddev>${stddev}</noise_stddev>
+
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+</robot>

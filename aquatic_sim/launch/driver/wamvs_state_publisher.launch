@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- Example of ROS localization using the example wamv with sensors -->
+<launch>
+  <!-- Names of the water surface robots -->
+  <arg name="usv_name_0" default="wamv0"/>
+  <arg name="usv_name_1" default="wamv1"/>
+  <arg name="usv_name_2" default="wamv2"/>
+  <arg name="usv_name_3" default="wamv3"/>
+
+  <!-- USV 0 -->
+  <include file="$(find aquatic_sim)/launch/driver/wamv_state_publisher.launch">
+    <arg name="usv_name" default="$(arg usv_name_0)"/>
+  </include>
+
+  <!-- USV 1 -->
+  <include file="$(find aquatic_sim)/launch/driver/wamv_state_publisher.launch">
+    <arg name="usv_name" default="$(arg usv_name_1)"/>
+  </include>
+
+  <!-- USV 2 -->
+  <include file="$(find aquatic_sim)/launch/driver/wamv_state_publisher.launch">
+    <arg name="usv_name" default="$(arg usv_name_2)"/>
+  </include>
+
+  <!-- USV 3 -->
+  <include file="$(find aquatic_sim)/launch/driver/wamv_state_publisher.launch">
+    <arg name="usv_name" default="$(arg usv_name_3)"/>
+  </include>
+
+</launch>

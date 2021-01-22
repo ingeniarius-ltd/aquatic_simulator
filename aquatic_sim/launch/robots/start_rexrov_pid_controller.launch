@@ -1,0 +1,11 @@
+<launch>
+   
+    <include file="$(find rexrov2_control)/launch/start_pid_controller.launch">
+        <arg name="teleop_on" value="False"/>
+        <arg name="joy_id" value="0"/>
+        <arg name="use_ned_frame" value="False"/>
+	<arg name="gui_on" value="False"/>
+    </include>
+
+
+</launch>

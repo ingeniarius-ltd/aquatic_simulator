@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- World containing sandisland model and some course challenges -->
+<sdf version="1.6">
+  <world name="ocean_obstacles_world">
+    <scene>
+      <sky>
+        <clouds>
+          <speed>12</speed>
+        </clouds>
+      </sky>
+      <grid>0</grid>
+      <origin_visual>0</origin_visual>
+    </scene>
+    <!-- Estimated latitude/longitude of sandisland from satellite imagery -->
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>21.30996</latitude_deg>
+      <longitude_deg>-157.8901</longitude_deg>
+      <elevation>0.0</elevation>
+      <!-- For legacy gazebo reasons, need to rotate -->
+      <!--<heading_deg>180</heading_deg>-->
+    </spherical_coordinates>
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose frame="">175.544 123.61 4.70958 0 0.168 -2.40718</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+      <!--<plugin name="GUITaskWidget" filename="libgui_task_widget.so"/>-->
+    </gui>
+    <include>
+      <!-- Note - the pose tag doesn't seem to work for heightmaps, so you need
+      to go into the model file to change the altitutde/height!-->
+      <pose> 0 0 0 0 0 0 </pose>
+      <uri>model://sandisland</uri>
+    </include>
+    
+    &gt;
+    
+    <model name="ocean_waves">
+      <static>true</static>
+      <plugin filename="libWavefieldModelPlugin.so" name="wavefield_plugin">
+        <static>false</static>
+        <update_rate>10</update_rate>
+        <size>1000 1000</size>
+        <cell_count>50 50</cell_count>
+        <wave>
+          <model>PMS</model>
+          <period>5</period>
+          <number>3</number>
+          <scale>1.5</scale>
+          <gain>0.1</gain>
+          <direction>1.0 0.0</direction>
+          <angle>0.4</angle>
+          <tau>2.0</tau>
+          <amplitude>0.0</amplitude>
+          <!-- No effect for the PMS model -->
+          <steepness>0.0</steepness>
+        </wave>
+      </plugin>
+      <link name="ocean_waves_link">
+        <visual name="ocean_waves_visual">
+          <plugin filename="libWavefieldVisualPlugin.so" name="ocean_waves_visual_plugin">
+            <enableRtt>true</enableRtt>
+            <rttNoise>0.1</rttNoise>
+            <refractOpacity>0.2</refractOpacity>
+            <reflectOpacity>0.2</reflectOpacity>
+            <wave>
+              <model>PMS</model>
+              <period>5</period>
+              <number>3</number>
+              <scale>1.5</scale>
+              <gain>0.1</gain>
+              <direction>1.0 0.0</direction>
+              <angle>0.4</angle>
+              <tau>2.0</tau>
+              <amplitude>0.0</amplitude>
+              <!-- No effect for the PMS model -->
+              <steepness>0.0</steepness>
+            </wave>
+          </plugin>
+          <geometry>
+            <mesh>
+              <uri>model://ocean_waves/meshes/mesh.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean_waves/materials/scripts/waves.material</uri>
+              <name>WaveSim/GerstnerWaves</name>
+            </script>
+          </material>
+          <laser_retro>-1</laser_retro>
+        </visual>
+        <visual name="ocean_waves_below_visual">
+          <pose>0 0 -0.05 0 0 0</pose>
+          <!-- Offset to prevent rendering conflict -->
+          <geometry>
+            <mesh>
+              <uri>model://ocean_waves/meshes/mesh_below.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>model://ocean_waves/materials/scripts/waves.material</uri>
+              <name>WaveSim/GerstnerWaves</name>
+            </script>
+          </material>
+          <laser_retro>-1</laser_retro>
+        </visual>
+      </link>
+    </model>
+    <!--Gazebo Plugin for simulating WAM-V dynamics-->
+    <plugin filename="libusv_gazebo_wind_plugin.so" name="wind">
+      <!-- models to be effected by the wind -->
+      <wind_obj>
+        <name>wamv</name>
+        <link_name>base_link</link_name>
+        <coeff_vector>.5 .5 .33</coeff_vector>
+      </wind_obj>
+      <!-- Wind -->
+      <wind_direction>270</wind_direction>
+      <!-- in degrees -->
+      <wind_mean_velocity>0</wind_mean_velocity>
+      <var_wind_gain_constants>0</var_wind_gain_constants>
+      <var_wind_time_constants>1</var_wind_time_constants>
+      <random_seed/>
+      <!-- set to zero/empty to randomize -->
+      <update_rate>10</update_rate>
+    </plugin>
+
+    <xacro:include filename="$(find vrx_gazebo)/worlds/xacros/usv_wind_plugin.xacro"/>
+
+    <include>
+      <uri>model://dock_2018_base</uri>
+      <name>dock_2018_base_0</name>
+      <pose>-10 -25 0 0 0 -1.0</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_3x3</uri>
+      <name>dock_block_3x3_0</name>
+      <pose>10 -25 0 0 0 2.75</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_3x3</uri>
+      <name>dock_block_3x3_3</name>
+      <pose>-15 15 0 0 0 -1.0</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_4x4_dynamic</uri>
+      <name>dock_block_4x4_dynamic_0</name>
+      <pose>20 -10 0 0 0 0.5</pose>
+    </include>
+
+    <include>
+      <uri>model://navigation_course1</uri>
+      <name>navigation_course1</name>
+      <pose>50 70 0 0 0 3.0</pose>
+    </include>
+
+    <include>
+      <uri>model://robotx_2018_qualifying_avoid_obstacles</uri>
+      <name>robotx_2018_qualifying_avoid_obstacles</name>
+      <pose>25 25 0 0 0 2.0</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_3x3</uri>
+      <name>dock_block_3x3_1</name>
+      <pose>35 -5 0 0 0 0.75</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_4x4_dynamic</uri>
+      <name>dock_block_4x4_dynamic_1</name>
+      <pose>20 50 0 0 0 1.27</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_2x2</uri>
+      <name>dock_block_2x2</name>
+      <pose>55 60 0 0 0 0.75</pose>
+    </include>
+
+     <include>
+      <uri>model://robotx_navigation_challenge</uri>
+      <name>robotx_navigation_challenge</name>
+      <pose>50 50 0 0 0 0.0</pose>
+    </include>
+
+    <!--<include>
+      <uri>model://navigation_task</uri>
+      <name>navigation_task</name>
+      <pose>50 50 0 0 0 3.0</pose>
+    </include>-->
+
+    <include>
+      <uri>model://dock_block_4x4_dynamic</uri>
+      <name>dock_block_4x4_dynamic_2</name>
+      <pose>60 50 0 0 0 3.54</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_3x3</uri>
+      <name>dock_block_3x3_2</name>
+      <pose>65 75 0 0 0 3.54</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_2018_base_dynamic</uri>
+      <name>dock_2018_base_dynamic</name>
+      <pose>70 45 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_2016_base</uri>
+      <name>dock_2016_base</name>
+      <pose>95 25 0 0 0 -0.4</pose>
+    </include>
+
+    <include>
+      <uri>model://dock_block_4x4_dynamic</uri>
+      <name>dock_block_4x4_dynamic_3</name>
+      <pose>105 75 0 0 0 1.57</pose>
+    </include>
+
+  </world>
+</sdf>
+

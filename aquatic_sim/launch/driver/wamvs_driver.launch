@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="max_angle" default="$(eval pi/2)"/>
+  <arg name="thrust_config" default="T"/>
+
+  <!-- Names of the water surface robots -->
+  <arg name="usv_name_0" default="wamv0"/>
+  <arg name="usv_name_1" default="wamv1"/>
+  <arg name="usv_name_2" default="wamv2"/>
+  <arg name="usv_name_3" default="wamv3"/>
+
+  <!-- Two cases for different topic names for rear thrusters -->
+  <!-- Case 1 -->
+  <group if="$(eval (arg('thrust_config') == 'H' or arg('thrust_config') == 'T') )">
+
+    <!-- Convert Twist messages to Drive messages -->
+    <node ns="$(arg usv_name_0)" pkg="vrx_gazebo" type="twist2thrust.py" name="$(arg usv_name_0)_twist2thrust" output="screen" args="--keyboard">
+      <remap from="left_cmd" to="/$(arg usv_name_0)/thrusters/left_thrust_cmd"/>
+      <remap from="right_cmd" to="/$(arg usv_name_0)/thrusters/right_thrust_cmd"/>
+    </node>
+
+        <!-- Convert Twist messages to Drive messages -->
+    <node ns="$(arg usv_name_1)" pkg="vrx_gazebo" type="twist2thrust.py" name="$(arg usv_name_1)_twist2thrust" output="screen" args="--keyboard">
+      
+      <remap from="left_cmd" to="/$(arg usv_name_1)/thrusters/left_thrust_cmd"/>
+      <remap from="right_cmd" to="/$(arg usv_name_1)/thrusters/right_thrust_cmd"/>
+    </node>
+
+        <!-- Convert Twist messages to Drive messages -->
+    <node ns="$(arg usv_name_2)" pkg="vrx_gazebo" type="twist2thrust.py" name="$(arg usv_name_2)_twist2thrust" output="screen" args="--keyboard">
+      <remap from="left_cmd" to="/$(arg usv_name_2)/thrusters/left_thrust_cmd"/>
+      <remap from="right_cmd" to="/$(arg usv_name_2)/thrusters/right_thrust_cmd"/>
+    </node>
+
+        <!-- Convert Twist messages to Drive messages -->
+    <node ns="$(arg usv_name_3)" pkg="vrx_gazebo" type="twist2thrust.py" name="$(arg usv_name_3)_twist2thrust" output="screen" args="--keyboard">
+      <remap from="left_cmd" to="/$(arg usv_name_3)/thrusters/left_thrust_cmd"/>
+      <remap from="right_cmd" to="/$(arg usv_name_3)/thrusters/right_thrust_cmd"/>
+    </node>
+
+  </group>
+
+</launch>

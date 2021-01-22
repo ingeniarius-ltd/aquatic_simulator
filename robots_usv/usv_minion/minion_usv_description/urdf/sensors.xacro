@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Some examples of sensors that can be added to the vehicle frame.
+    Set the origin of the sensor frames correctly for your application
+    Look into the sensor macros in the package uuv_sensor_ros_plugins/urdf for
+    more examples or add you own custom sensor units.
+  -->
+
+  <!-- Mount a Pose 3D sensor. -->
+  <xacro:default_pose_3d namespace="${namespace}" parent_link="${namespace}/base_link">
+    <!-- <origin xyz="0 0 0" rpy="0 0 0"/> -->
+  </xacro:default_pose_3d>
+
+  <!-- Mount a GPS.-->
+   <!-- <xacro:gps_ubloxneom8t namespace="${namespace}" parent_link="${namespace}/base_link"> -->
+    <!-- <origin xyz="0.3 0 0.3" rpy="0 0 0"/> -->
+    <!-- <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  </xacro:gps_ubloxneom8t> -->
+
+  <!--  Mount a Hydrophone sensor -->
+  <xacro:default_hydrophone namespace="${namespace}" parent_link="${namespace}/base_link" beacon_parent="rexrov2">
+    <origin xyz="0 0 -1" rpy="0 0 0"/>
+  </xacro:default_hydrophone>
+
+</robot>

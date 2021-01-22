@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="node_start_delay" default="10.0" />  
+  <arg name="enable_wifi" default="false" /> 
+
+  <!-- Load world with robots -->
+  <include file="$(find aquatic_sim)/launch/robots/wamvs_rexrov2_oceanworld.launch"> 
+    <arg name="world" value="$(find aquatic_sim)/worlds/island_obstacles.world" />
+  </include>
+
+  <!-- Start wifi communication -->
+  <include file="$(find wifi_comm_emulation)/launch/wireless_communication.launch" if="$(arg enable_wifi)" >  
+    <arg name="node_start_delay" default="$(arg node_start_delay)"/>
+  </include>
+
+</launch>

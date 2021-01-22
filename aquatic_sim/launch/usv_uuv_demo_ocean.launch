@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="node_start_delay" default="10.0" />  
+
+  <!-- Load world with robots -->
+  <include file="$(find usv_uuv_simulation)/launch/robots/wamvs_rexrov2_oceanworld.launch"> 
+  </include>
+
+  <!-- Start wifi communication -->
+  <include file="$(find wifi_comm_emulation)/launch/wireless_communication.launch" >  
+    <arg name="node_start_delay" default="$(arg node_start_delay)"/>
+  </include>
+
+  <!-- Start aqua_gps 
+  <include file="$(find aqua_gps_demo)/launch/start_aqua_gps_demo_wamvs_rexrov2.launch" >  </include>-->
+
+  <!-- Start publishing targets
+  <include file="$(find somar_mrs)/launch/generate_targets.launch" >  </include> -->
+
+</launch>

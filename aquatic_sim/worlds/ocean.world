@@ -1,0 +1,128 @@
+<?xml version="1.0" ?>
+<!--
+  Copyright (C) 2019  Rhys Mainwaring
+
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+ 
+       http://www.apache.org/licenses/LICENSE-2.0
+ 
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+-->
+<sdf version="1.6" xmlns:xacro="http://ros.org/wiki/xacro">
+  <world name="ocean_world">
+
+    <!-- GUI -->
+    <gui>
+      <plugin name="keyboard_gui_plugin" filename="libKeyboardGUIPlugin.so"/>
+      <camera name='user_camera'>
+        <pose frame=''>73.3604 -0.353679 10.7644 0 0.271643 3.09219</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
+    <!-- Scene -->
+    <scene>
+      <sky>
+        <time>10</time>
+        <sunrise>6</sunrise>
+        <sunset>18</sunset>
+        <clouds>
+          <speed>12</speed>
+          <direction>1.57079</direction>
+        </clouds>
+      </sky>
+      <grid>false</grid>
+      <origin_visual>false</origin_visual>
+    </scene>
+
+    <!-- Lights -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <model name="wireless_transmitter">
+      <link name="wireless_transmitter_link">
+        <pose>2 4 0.5 0 0 0</pose>
+
+        <collision name="box_collision">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+
+        <sensor name="wireless_transmitter" type="wireless_transmitter">
+          <plugin name="wifi_router_plugin" filename="libwifirouter.so"/>
+          <always_on>1</always_on>
+          <update_rate>1</update_rate>
+          <visualize>true</visualize>
+          <transceiver>
+            <essid>wifi_router</essid>
+            <frequency>2442.0</frequency>
+            <power>14.5</power>
+            <gain>2.6</gain>
+          </transceiver>
+        </sensor>
+
+      </link>
+    </model> 
+
+    <!--Waves-->
+    <xacro:include filename="$(find wave_gazebo)/world_models/ocean_waves/model.xacro"/>
+    <xacro:ocean_waves/>
+
+
+    <plugin name="wayfinding_scoring_plugin"
+            filename="libwayfinding_scoring_plugin.so">
+      <vehicle>wamv</vehicle>
+      <task_name>wayfinding</task_name>
+      <!-- Goal as Latitude, Longitude, Yaw -->
+      <waypoints>
+        <!-- Approx. starting point of wamv -->
+        <waypoint>
+          <pose>0 0 1</pose>
+        </waypoint>
+        <!-- A waypoint -->
+        <waypoint>
+          <pose>0 0 1</pose>
+        </waypoint>
+
+      </waypoints>
+      <initial_state_duration>10</initial_state_duration>
+      <ready_state_duration>10</ready_state_duration>
+      <running_state_duration>300</running_state_duration>
+      <release_joints>
+        <joint>
+          <name>wamv_external_pivot_joint</name>
+        </joint>
+        <joint>
+          <name>wamv_external_riser</name>
+        </joint>
+      </release_joints>
+      <markers>
+        <material>Gazebo/Green</material>
+        <scaling>0.2 0.2 2.0</scaling>
+        <height>0.5</height>
+      </markers>
+    </plugin>
+
+  </world>
+</sdf>

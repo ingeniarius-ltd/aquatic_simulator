@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(usv_wamv)
+find_package(catkin REQUIRED COMPONENTS
+  wamv_description
+  usv_gazebo_plugins
+  xacro
+)
+catkin_package(
+  CATKIN_DEPENDS wamv_description usv_gazebo_plugins xacro
+)
+
+# Generate urdf files from xacro and install
+xacro_add_files(
+  urdf/wamv_gazebo.urdf.xacro
+  INORDER INSTALL DESTINATION urdf
+)
+
+# Install meshes and textures
+install(DIRECTORY models/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/models)
+
+# Install xacro files / macros
+install(DIRECTORY urdf/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf)
+
+# Install config files
+install(DIRECTORY config/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config)
+
+# Install launch files
+install(DIRECTORY launch/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)

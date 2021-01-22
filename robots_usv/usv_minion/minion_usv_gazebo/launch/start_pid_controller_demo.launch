@@ -1,0 +1,56 @@
+
+<launch>
+    <!-- Vehicle's namespace -->
+    <arg name="namespace" default="minion_usv"/>
+    <arg name="usv_name" default="minion_usv"/>
+
+    <!-- If you want to generate a ROS bag with the recorded simulated data, set this flag to true -->
+    <arg name="record" default="false"/>
+    <arg name="bag_filename" default="recording.bag"/>
+
+    <arg name="use_ned_frame" default="false"/>
+    <arg name="teleop_on" default="false"/>
+    <arg name="joy_id" default="0"/>
+
+    <!-- Initial position and heading of the vehicle (wrt Gazebo's inertial frame)  -->
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
+    <arg name="yaw" default="0"/>
+
+    <!-- Start the a underwater world simulation scenario -->
+    <!-- <include file="$(find uuv_descriptions)/launch/ocean_waves.launch"/> -->
+    <!-- <include file="$(find uuv_descriptions)/launch/lake.launch"/> -->
+
+    <!-- Wait 5s -->
+    <!-- <include file="$(find uuv_simulation_wrapper)/launch/unpause_simulation.launch">
+        <arg name="timeout" value="5"/>
+    </include> -->
+
+    <!-- Add the minion_usv vehicle to the world simulation (namespace: minion_usv) -->
+    <include file="$(find minion_usv_description)/launch/upload_minion_usv.launch">
+        <arg name="namespace" value="$(arg namespace)"/>
+        <arg name="x" value="$(arg x)"/>
+        <arg name="y" value="$(arg y)"/>
+        <arg name="z" value="$(arg z)"/>
+        <arg name="yaw" value="$(arg yaw)"/>
+        <!-- <arg name="use_ned_frame" value="$(arg use_ned_frame)"/> -->
+    </include>
+
+    <!-- Start the PID controller with its default parameters for the RexROV vehicle  -->
+    <include file="$(find minion_usv_control)/launch/start_pid_controller.launch">
+        <arg name="usv_name" value="$(arg usv_name)"/>
+        <arg name="teleop_on" value="$(arg teleop_on)"/>
+        <arg name="joy_id" value="$(arg joy_id)"/>
+        <arg name="use_ned_frame" value="$(arg use_ned_frame)"/>
+    </include>
+
+    <!-- Open RViz for visualization of sensor data and visualization markers -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find minion_usv_gazebo)/rviz/minion_usv.rviz"/> -->
+
+    <!-- Initialize the recording fo the simulation according to the record flag  -->
+    <!-- <include file="$(find minion_usv_gazebo)/launch/record.launch">
+      <arg name="record" value="$(arg record)"/>
+      <arg name="bag_filename" value="$(arg bag_filename)"/>
+    </include> -->
+</launch>

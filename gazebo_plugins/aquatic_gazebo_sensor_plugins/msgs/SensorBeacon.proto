@@ -1,0 +1,46 @@
+// Copyright (c) 2020 Ingeniarius, Lda Authors.
+// All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// This is a message to hold data from a Beacon sensor.
+// The definition as a sensor maybe is not the better, because it's sends
+// a pressure wave to the environment surround.
+//
+// Triggered Time [s, ns]. TEST IF IT'S IS EQUAL FROM HEADER MENSSAGE???
+// Triggered Pose of Beacon Ground Truth [m].
+// Operating Transmitted Frequency [Hz]. MAYBE CHANGE TO A CHANNEL? (Beacon 1319A)
+// Propagation Beam Pattern [Degrees].
+// Sound Pressure level (SPL) [dB].
+//
+// Beacon Sensor send one an pressure wave by an External Trigger.
+// Above parameters are the input of a mathematical model that will describe
+// the behavior of this Beacon Sensor. Ref [ Acoustic Underwater Propagation ].
+//
+// A future implementation can be sending Rays/Ranges to world
+// that will correspond to Multi-path propagation more condensed
+// but maybe the problem is how to do the reflections rays...
+
+syntax = "proto2";
+package aquatic_gazebo_sensor_msgs.msgs;
+import "time.proto";
+import "vector3d.proto";
+
+message Beacon
+{
+  required gazebo.msgs.Time initial_time = 1;
+  required gazebo.msgs.Vector3d initial_pose = 2;
+  required double operating_frequency = 3 [default = 10000.0];
+  required double spl = 4 [default = 183.0];
+  required double beam_pattern = 5 [default = 180.0];
+}
