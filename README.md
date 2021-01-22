@@ -63,7 +63,6 @@ Clone this repository and build.
 Main launch file with island world, four WAM-Vs and one RexRov2:
 ```
 $ roslaunch aquatic_sim usv_uuv_demo_island.launch
-
 ```
 Launch world with four WAM-Vs:
 ```
