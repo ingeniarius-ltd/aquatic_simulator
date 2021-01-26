@@ -2,7 +2,7 @@
 <launch>
 
   <arg name="node_start_delay" default="10.0" />  
-  <arg name="enable_wifi" default="false" /> 
+  <arg name="enable_wifi" default="False" /> 
 
   <!-- Load world with robots -->
   <include file="$(find aquatic_sim)/launch/robots/wamvs_rexrov2_oceanworld.launch"> 
