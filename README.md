@@ -9,7 +9,7 @@ The software support is provided for the following software environment:
 
     Ubuntu Desktop 18.04 Bionic (64-bit)
     Gazebo 9.11.0+ (<9.11.0 is not sufficient)
-    ROS Melodic
+    ROS Melodic desktop-full
 
 
 ## Installation:
